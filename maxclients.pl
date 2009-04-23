@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# Estimate Apache2 maximum MaxClients value (pre-fork)
+# Estimate maximum MaxClients value for Apache2 (pre-fork)
 #
 
 use strict;
@@ -26,7 +26,7 @@ my $maxclients = (($maxphy) * $maxapache) / ($average);
 print "\nHost: $host\n";
 print "Date: ", scalar localtime(), "\n";
 print "---\n";
-print "Total physical memory (kB): $maxphy\n";
+printf("Total physical memory: %d GB\n", $maxphy / (1024*1024));
 printf("Percent allocated to Apache: %.0f%%\n", 100 * $maxapache);
-printf("Average child size (kB): %.0f\n", $average);
+printf("Average child size: %d MB\n", $average / 1024);
 printf("Estimated maximum MaxClients value: %.0f\n", $maxclients);
