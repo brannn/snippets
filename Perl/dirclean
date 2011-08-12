@@ -1,0 +1,45 @@
+#!/usr/bin/perl -l
+
+use Getopt::Long;
+use File::Find;
+
+Getopt::Long::Configure("bundling");
+
+GetOptions("time|t=n", "noprompt|n", "recursive|R", "help|?");
+
+if (!defined($directory = pop) || defined($opt_help)) {
+print qq{
+Usage: clean_dump_image_queue.pl <options> <directory>
+Clean a directory by deleting files older than n days.
+
+  -t, --time=N         delete files older than N days
+  -n, --noprompt       do not prompt before deleting
+  -R, --recursive      delete files in all subdirectories
+  --help               display this help and exit
+};
+exit(0);
+}
+
+$days = defined($opt_time) ? $opt_time : 14;     # defaults to two weeks
+
+sub process_file {
+      push @files, $_ if (-f && -M _ > $days);
+}
+
+if (defined($opt_recursive)) {
+      find({ wanted => \&process_file, no_chdir => 1 }, ($directory));
+} else {
+      opendir(DIR, $directory) or die "can't opendir $directory: $!";
+      for (readdir(DIR)) {
+            $_ = "$directory/$_";
+            &process_file;
+      }
+}
+
+unless (defined($opt_noprompt)) {
+      print "Files older than $days:\n".join "\n",@files;
+      print "Delete (Y/N)?";
+      exit (0) if (lc <STDIN> ne "y\n");
+}
+
+unlink @files;
