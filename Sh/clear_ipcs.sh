@@ -1,8 +1,8 @@
 #!/bin/sh
 
-if [ "$(id -un)" != "gamespot" ] 
+if [ "$(id -un)" != "user" ] 
 then
-        echo "This script must be run as gamespot" 1>&2
+        echo "This script must be run as user" 1>&2
         exit 1
 fi
 
@@ -26,13 +26,13 @@ start_apache() {
 }
 
 clear_ipc() {
-        for shm in `ipcs -m | grep gamespot | cut -c12-22`
+        for shm in `ipcs -m | grep user | cut -c12-22`
         do
                 ipcrm -m $shm
                 echo "*** cleared shm IPC"
         done
        
-        for sem in `ipcs -s | grep gamespot | cut -c12-22`
+        for sem in `ipcs -s | grep user | cut -c12-22`
         do
                 ipcrm -s $sem
                 echo "*** cleared sem IPC"
