@@ -1,4 +1,8 @@
 #!/bin/sh
+# Author       : Brandon Huey <brandon.huey@me.com>
+# Description  : Util to clean shared IPC resources on busy web servers
+# $Id$
+
 
 if [ "$(id -un)" != "user" ] 
 then
